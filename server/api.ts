@@ -2,95 +2,50 @@ import express from 'express';
 import { database } from '~/database/context';
 import * as schema from '~/database/schema';
 import { eq } from 'drizzle-orm';
-import type {TSalesData} from "../interfaces/asins";
+ import {executeJSSnippet} from './utils/jsSnippet';
 
 
 const router = express.Router();
 
-//ASIN Data
+//Snippet Data
 
-router.post('/asin', async (req, res) => {
-    const { name, email, asin, category  } = req.body;
+
+router.post('/jssnippet', async (req, res) => {
+    const { name, jsSnippet } = req.body;
     const db = database();
+
+    // const result = executeJSSnippet(jsSnippet);
     try {
-        await db.insert(schema.ASINs).values({ name, email, asin, category });
+        await db.insert(schema.JSSnippet).values({ name, jsSnippet });
         res.json({ success: true });
     } catch (error) {
-        res.status(500).json({ error: 'Error adding ASIN' });
+        res.status(500).json({ error: `Error adding snippet ${error}`,  });
     }
 });
 
-router.put('/asin/:asin', async (req, res) => {
-    const { name, email, category  } = req.body;
-    const {asin} = req.params;
-
-    let updated_asin: any={};
-    if (name) {
-        updated_asin.name = name;
-    }
-    if (email) {
-        updated_asin.email = email;
-    }
-    if (category) {
-        updated_asin.category = category;
-    }
+router.get('/jssnippets', async (req, res) => {
     const db = database();
     try {
-        await db.update(schema.ASINs).set({ ...updated_asin }).where(eq(schema.ASINs.asin, asin));
-        res.json({ success: true });
+        const snippets = await db.query.JSSnippet.findMany();
+        res.json(snippets);
     } catch (error) {
-        res.status(500).json({ error: 'Error updating ASIN' });
+        res.status(500).json({ error: 'Error fetching snippets' });
     }
 });
 
-router.delete('/asin/:asin', async (req, res) => {
-    const {asin} = req.params;
+router.get('/jssnippet/:snippetId', async (req, res) => {
+    const { snippetId } = req.params;
     const db = database();
     try {
-        await db.delete(schema.ASINs).where(eq(schema.ASINs.asin, asin));
-        res.json({ success: true });
+        const snippet = await db.query.JSSnippet.findFirst({ where: eq(schema.JSSnippet.id, parseInt(snippetId)) });
+        const result = executeJSSnippet(snippet?.jsSnippet);
+        const response = { ...snippet, result };
+        res.json(response);
     } catch (error) {
-        res.status(500).json({ error: 'Error deleting ASIN' });
+        res.status(500).json({ error: `Error fetching snippet:${error}`});
     }
 });
 
-router.get('/asins', async (req, res) => {
-    const db = database();
-    try {
-        const asins = await db.query.ASINs.findMany();
-        res.json(asins);
-    } catch (error) {
-        res.status(500).json({ error: 'Error fetching ASINs' });
-    }
-});
-
-//Sales Data
-
-
-router.post('/sales/:asin', async (req, res) => {
-    const{sales_data}:{sales_data:TSalesData[]} = req.body;
-    const {asin} = req.params;
-    const db = database();
-
-    try {
-        const salesValues = sales_data.map(({ sales_count, date }) => ({ asin, sales_count, date }));
-        await db.insert(schema.sales).values(salesValues);
-        res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ error: 'Error adding sales' });
-    }
-});
-
-router.get('/sales/:asin', async (req, res) => {
-    const {asin} = req.params;
-    const db = database();
-    try {
-        const sales = await db.query.sales.findMany({where: eq(schema.sales.asin, asin)});
-        res.json(sales);
-    } catch (error) {
-        res.status(500).json({ error: 'Error fetching sales' });
-    }
-})
 
 
 

@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS "JSSnippet" (
+	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "JSSnippet_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
+	"name" varchar(255) NOT NULL,
+	"jsSnippet" text NOT NULL
+);
+--> statement-breakpoint
+ALTER TABLE "ASINs" ALTER COLUMN "created_at" SET DEFAULT '2025-05-29T09:41:23.883Z';
