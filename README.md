@@ -1,32 +1,51 @@
-Basic Setup
-
-Frontend - 
-3 pages required 
-- JS Snippet Creation form
-- JSSnippet list
-- SJ Snippet result
-
-Backend -
-- POST API to save the snippet
-- GET list API to get the list of saved snippets
-- GET API (Run the snippet and get the result)
-
-DB - 
-- 1 Table 
- id (uuid), name, snippet
+Technical Stack
+Frontend: React with React Router
+Backend: Express.js
+Database: PostgreSQL
+UI Library: ShadCN UI components
 
 
-Additional setup
 
- - PUT API to edit the snippet
- - Beautification using ShadCn - 
- Table, Add Snippet Button, button hover states/disable states, Form UI, Result tile
+Application Structure
 
 
- Things that we can add later - (if I had time)
- - Pagination for the list
- - Error handling better
- - UI also a little better
- - Skeletons for loading conditions
- - Disable conditions for the buttons in the form
- 
+Frontend Pages
+Snippet Creation Form (/create-snippet)
+- Form for creating new JavaScript snippets
+- Input fields for snippet name and code
+
+Snippet List (/)
+- Table displaying all saved snippets
+- Navigation to view/edit individual snippets
+
+Snippet Result (/view-snippet/:snippetId)
+- Displays the execution result of a JavaScript snippet
+- Shows both the snippet code and its output
+
+
+Backend APIs
+POST /api/jssnippet - Save a new snippet to the database
+GET /api/jssnippets - Retrieve a list of all snippets
+GET /api/jssnippet/:id - Execute a snippet and return the result
+PUT /api/jssnippet/:id - Update an existing snippet
+
+
+Database Schema
+JSSnippet Table
+id (UUID): Primary key
+name (String): Snippet name
+jsSnippet (Text): JavaScript code
+
+
+UI Components
+- Tables: Display snippet list with interactive rows
+- Buttons: Actions for creating, editing, and executing snippets
+- Forms: Input fields with validation for snippet creation/editing
+
+
+Future Enhancements
+- Pagination for the snippet list
+- Better error handling and error boundaries
+- Better UI
+- Loading skeletons for async operations
+- button states (disabled during loading, etc.)
