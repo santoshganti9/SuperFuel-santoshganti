@@ -21,4 +21,12 @@ Additional setup
  - PUT API to edit the snippet
  - Beautification using ShadCn - 
  Table, Add Snippet Button, button hover states/disable states, Form UI, Result tile
+
+
+ Things that we can add later - (if I had time)
+ - Pagination for the list
+ - Error handling better
+ - UI also a little better
+ - Skeletons for loading conditions
+ - Disable conditions for the buttons in the form
  
